@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -20,7 +21,6 @@ import com.nikhilsnayak3473.technoblog.dto.ErrorDetails;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-	// handle specific exceptions
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception,
 			WebRequest webRequest) {
@@ -36,7 +36,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
 
-	// global exceptions
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception, WebRequest webRequest) {
 		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
@@ -55,6 +54,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		});
 
 		return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<ErrorDetails> handleAccessDeniedException(AccessDeniedException exception, WebRequest webRequest) {
+		ErrorDetails errorDetails = new ErrorDetails(new Date(), exception.getMessage(),
+				webRequest.getDescription(false));
+		return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
 	}
 
 }
