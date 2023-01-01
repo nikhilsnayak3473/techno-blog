@@ -8,7 +8,7 @@
 		<version>3.0.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.springboot.blog</groupId>
+	<groupId>com.nikhilsnayak3473.technoblog</groupId>
 	<artifactId>springboot-blog-rest-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>springboot-blog-rest-api</name>
