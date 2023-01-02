@@ -3,7 +3,6 @@ package com.nikhilsnayak3473.technoblog.service.impl;
 import java.util.HashSet;
 import java.util.Set;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +18,7 @@ import com.nikhilsnayak3473.technoblog.entity.User;
 import com.nikhilsnayak3473.technoblog.exception.BlogAPIException;
 import com.nikhilsnayak3473.technoblog.repository.RoleRepository;
 import com.nikhilsnayak3473.technoblog.repository.UserRepository;
+import com.nikhilsnayak3473.technoblog.security.JwtTokenProvider;
 import com.nikhilsnayak3473.technoblog.service.AuthService;
 
 @Service
@@ -28,14 +28,16 @@ public class AuthServiceImpl implements AuthService {
 	private UserRepository userRepository;
 	private RoleRepository roleRepository;
 	private PasswordEncoder passwordEncoder;
+	private JwtTokenProvider jwtTokenProvider;
 
 	public AuthServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository,
-			RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+			RoleRepository roleRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
 		super();
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.jwtTokenProvider = jwtTokenProvider;
 	}
 
 	@Override
@@ -43,8 +45,10 @@ public class AuthServiceImpl implements AuthService {
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginDto.getUsernameOrEmail(), loginDto.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		
+		String token = jwtTokenProvider.generateToken(authentication);
 
-		return "USer logged in Succcessfully";
+		return token;
 	}
 
 	@Override
@@ -63,12 +67,12 @@ public class AuthServiceImpl implements AuthService {
 		user.setEmail(registerDto.getEmail());
 		user.setUsername(registerDto.getUsername());
 		user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-		
+
 		Set<Role> roles = new HashSet<Role>();
 		Role userRole = roleRepository.findByName("ROLE_USER").get();
 		roles.add(userRole);
 		user.setRoles(roles);
-		
+
 		userRepository.save(user);
 
 		return "User register successfully";
