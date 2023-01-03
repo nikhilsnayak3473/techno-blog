@@ -19,7 +19,7 @@ import com.nikhilsnayak3473.technoblog.service.CommentService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/posts/{postId}")
+@RequestMapping("/api/v1/posts/{postId}")
 public class CommentController {
 
 	private CommentService commentService;

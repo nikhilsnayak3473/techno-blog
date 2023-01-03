@@ -13,7 +13,7 @@ import com.nikhilsnayak3473.technoblog.dto.RegisterDto;
 import com.nikhilsnayak3473.technoblog.service.AuthService;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
 	private AuthService authService;
