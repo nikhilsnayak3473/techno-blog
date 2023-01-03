@@ -38,12 +38,16 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http.csrf().disable().authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-				.requestMatchers("/api/auth/**").permitAll().anyRequest().authenticated()
+		http.csrf().disable()
+				.authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+						.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
+						.requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/swagger-resources/**").permitAll()
+						.requestMatchers(HttpMethod.GET, "/webjars/**").permitAll().anyRequest().authenticated()
 
-		)
-//		.httpBasic(Customizer.withDefaults())
-				.exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
+				).exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntryPoint))
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
 

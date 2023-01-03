@@ -9,5 +9,7 @@ import com.nikhilsnayak3473.technoblog.entity.Role;
 public interface RoleRepository extends JpaRepository<Role, Long>{
 	
 	Optional<Role> findByName(String name);
+	
+	Boolean existsByName(String name);
 
 }
